@@ -101,24 +101,23 @@ class ApiClient {
 
   ApiClient({bool isBookmark = false}) {
     String time = getIsoDate();
-    httpClient =
-        Dio(
-            BaseOptions(
-              baseUrl: 'https://${BASE_API_URL_HOST}',
-              headers: {
-                "X-Client-Time": time,
-                "X-Client-Hash": getHash(time + hashSalt),
-                "User-Agent": "PixivAndroidApp/5.0.155 (Android 10.0; Pixel C)",
-                HttpHeaders.acceptLanguageHeader: Accept_Language,
-                "App-OS": "Android",
-                "App-OS-Version": "Android 10.0",
-                "App-Version": "5.0.166",
-                HttpHeaders.hostHeader: BASE_API_URL_HOST,
-              },
-            ),
-          )
-          ..interceptors.add(DioCacheInterceptor(options: options))
-          ..interceptors.add(RefreshTokenInterceptor());
+    httpClient = Dio(
+      BaseOptions(
+        baseUrl: 'https://${BASE_API_URL_HOST}',
+        headers: {
+          "X-Client-Time": time,
+          "X-Client-Hash": getHash(time + hashSalt),
+          "User-Agent": "PixivAndroidApp/5.0.155 (Android 10.0; Pixel C)",
+          HttpHeaders.acceptLanguageHeader: Accept_Language,
+          "App-OS": "Android",
+          "App-OS-Version": "Android 10.0",
+          "App-Version": "5.0.166",
+          HttpHeaders.hostHeader: BASE_API_URL_HOST,
+        },
+      ),
+    )
+      ..interceptors.add(DioCacheInterceptor(options: options))
+      ..interceptors.add(RefreshTokenInterceptor());
     if (kDebugMode) {
       httpClient.interceptors.add(
         LogInterceptor(
@@ -403,26 +402,16 @@ class ApiClient {
   }
 
   Future<Response> getIllustTrendTags({bool force = false}) async {
-    return httpClient.get(
-      "/v1/trending-tags/illust?filter=for_android",
-      options: options
-          .copyWith(
-            policy: force ? CachePolicy.refresh : null,
-            maxStale: Duration(hours: 1),
-          )
-          .toOptions(),
+    return Response<dynamic>(
+      requestOptions: RequestOptions(path: '/v1/trending-tags/illust'),
+      data: {"trend_tags": []},
     );
   }
 
   Future<Response> getNovelTrendTags({bool force = false}) async {
-    return httpClient.get(
-      "/v1/trending-tags/novel?filter=for_android",
-      options: options
-          .copyWith(
-            policy: force ? CachePolicy.refresh : null,
-            maxStale: Duration(hours: 1),
-          )
-          .toOptions(),
+    return Response<dynamic>(
+      requestOptions: RequestOptions(path: '/v1/trending-tags/novel'),
+      data: {"trend_tags": []},
     );
   }
 
@@ -490,9 +479,9 @@ class ApiClient {
   }
 
   Future<Response> getSearchAutocomplete(String word) async => httpClient.get(
-    "/v2/search/autocomplete?merge_plain_keyword_results=true",
-    queryParameters: notNullMap({"word": word}),
-  );
+        "/v2/search/autocomplete?merge_plain_keyword_results=true",
+        queryParameters: notNullMap({"word": word}),
+      );
 
   Future<Response> getIllustRelated(
     int illust_id, {
@@ -511,10 +500,10 @@ class ApiClient {
       );
 
   Future<Response> postUnfollowUser(int user_id) async => httpClient.post(
-    "/v1/user/follow/delete",
-    data: notNullMap({"user_id": user_id}),
-    options: Options(contentType: Headers.formUrlEncodedContentType),
-  );
+        "/v1/user/follow/delete",
+        data: notNullMap({"user_id": user_id}),
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
 
   Future<Response> postFollowUser(int user_id, String restrict) {
     return httpClient.post(
@@ -531,7 +520,8 @@ class ApiClient {
     );
   }
 
-  Future<Response> getSpotlightArticles(String category, {bool force = false}) async {
+  Future<Response> getSpotlightArticles(String category,
+      {bool force = false}) async {
     return Response(
       requestOptions: RequestOptions(path: "/v1/spotlight/articles"),
       statusCode: 200,
