@@ -1,0 +1,49 @@
+name: Build Android
+
+on:
+    push:
+        branches: [master]
+    workflow_dispatch:
+
+jobs:
+    Build_Android:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Setup Java
+              uses: actions/setup-java@v4
+              with:
+                  distribution: temurin
+                  java-version: 17
+
+            - name: Setup Flutter
+              uses: subosito/flutter-action@v2
+              with:
+                  channel: stable
+
+            - name: Flutter version
+              run: flutter --version
+
+            - name: Get app dependencies
+              run: flutter pub get
+
+            - name: Get rhttp dependencies
+              working-directory: plugins/rhttp/rhttp
+              run: flutter pub get
+
+            - name: Generate rhttp freezed files
+              working-directory: plugins/rhttp/rhttp
+              run: dart run build_runner build
+
+            - name: Generate app files
+              run: dart run build_runner build
+
+            - name: Build APK
+              run: flutter build apk --release
+
+            - uses: actions/upload-artifact@v7
+              with:
+                  name: pixez-android.apk
+                  path: build/app/outputs/flutter-apk/app-release.apk
