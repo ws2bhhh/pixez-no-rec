@@ -532,7 +532,7 @@ class ApiClient {
   }
 
   Future<Response> getSpotlightArticles(String category, {bool force = false}) {
-    return Response(
+    return Response<dynamic>(
       requestOptions: RequestOptions(path: '/v1/spotlight/articles'),
       data: {"spotlight_articles": [], "next_url": null},
     );
