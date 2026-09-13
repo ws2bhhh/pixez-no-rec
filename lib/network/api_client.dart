@@ -189,32 +189,30 @@ class ApiClient {
   }
 
   Future<Response> getNovelRecommended() async {
-    return httpClient.get(
-      "/v1/novel/recommended?include_privacy_policy=true&filter=for_android&include_ranking_novels=true",
+    return Response(
+      requestOptions: RequestOptions(path: '/v1/novel/recommended'),
+      data: {"novels": [], "next_url": null},
     );
   }
 
   Future<Response> getRecommend() async {
-    return httpClient.get(
-      "/v1/illust/recommended?filter=for_ios&include_ranking_label=true",
+    return Response(
+      requestOptions: RequestOptions(path: '/v1/illust/recommended'),
+      data: {"illusts": [], "next_url": null},
     );
   }
 
   Future<Response> getMangaRecommend() async {
-    return httpClient.get(
-      "/v1/manga/recommended?filter=for_ios&include_ranking_label=true",
+    return Response(
+      requestOptions: RequestOptions(path: '/v1/manga/recommended'),
+      data: {"illusts": [], "next_url": null},
     );
   }
 
   Future<Response> getUserRecommended({bool force = false}) async {
-    return httpClient.get(
-      "/v1/user/recommended?filter=for_android",
-      options: options
-          .copyWith(
-            policy: force ? CachePolicy.refresh : null,
-            maxStale: Duration(minutes: 2),
-          )
-          .toOptions(),
+    return Response(
+      requestOptions: RequestOptions(path: '/v1/user/recommended'),
+      data: {"user_previews": [], "next_url": null},
     );
   }
 
@@ -499,16 +497,12 @@ class ApiClient {
   Future<Response> getIllustRelated(
     int illust_id, {
     bool force = false,
-  }) async => httpClient.get(
-    "/v2/illust/related?filter=for_android",
-    options: options
-        .copyWith(
-          policy: force ? CachePolicy.refresh : null,
-          maxStale: Duration(days: 1),
-        )
-        .toOptions(),
-    queryParameters: notNullMap({"illust_id": illust_id}),
-  );
+  }) async {
+    return Response(
+      requestOptions: RequestOptions(path: '/v2/illust/related'),
+      data: {"illusts": [], "next_url": null},
+    );
+  }
 
   Future<Response> getIllustBookmarkDetail(int illust_id) async =>
       httpClient.get(
@@ -538,15 +532,9 @@ class ApiClient {
   }
 
   Future<Response> getSpotlightArticles(String category, {bool force = false}) {
-    return httpClient.get(
-      "/v1/spotlight/articles?filter=for_android",
-      queryParameters: {"category": category},
-      options: options
-          .copyWith(
-            policy: force ? CachePolicy.refresh : null,
-            maxStale: Duration(hours: 23),
-          )
-          .toOptions(),
+    return Response(
+      requestOptions: RequestOptions(path: '/v1/spotlight/articles'),
+      data: {"spotlight_articles": [], "next_url": null},
     );
   }
 
