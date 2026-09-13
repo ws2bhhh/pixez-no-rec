@@ -45,5 +45,8 @@ jobs:
 
             - uses: actions/upload-artifact@v7
               with:
-                  name: pixez-android.apk
-                  path: build/app/outputs/flutter-apk/app-release.apk
+                  name: pixez-android-apks
+                  path: |
+                      build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+                      build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+                      build/app/outputs/flutter-apk/app-x86_64-release.apk
