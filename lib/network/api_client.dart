@@ -531,10 +531,14 @@ class ApiClient {
     );
   }
 
-  Future<Response> getSpotlightArticles(String category, {bool force = false}) {
-    return Response<dynamic>(
-      requestOptions: RequestOptions(path: '/v1/spotlight/articles'),
-      data: {"spotlight_articles": [], "next_url": null},
+  Future<Response> getSpotlightArticles(String category, {bool force = false}) async {
+    return Response(
+      requestOptions: RequestOptions(path: "/v1/spotlight/articles"),
+      statusCode: 200,
+      data: {
+        "spotlight_articles": [],
+        "next_url": null,
+      },
     );
   }
 
